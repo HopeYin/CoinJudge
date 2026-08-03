@@ -162,10 +162,17 @@ export default function MinePage() {
       <div className="bg-card rounded-l shadow-card mx-4 mt-2.5 p-4">
         <div className="text-xs text-text-3 mb-1">功能</div>
         <button
-          className="pressable w-full flex items-center justify-between py-3.5"
+          className="pressable w-full flex items-center justify-between py-3.5 border-b border-border"
           onClick={() => navigate('/monthly')}
         >
           <span className="text-[15px] text-text-1">月底对账</span>
+          <IconChevron width={18} height={18} className="text-text-3" />
+        </button>
+        <button
+          className="pressable w-full flex items-center justify-between py-3.5"
+          onClick={() => navigate('/categories')}
+        >
+          <span className="text-[15px] text-text-1">分类管理</span>
           <IconChevron width={18} height={18} className="text-text-3" />
         </button>
       </div>

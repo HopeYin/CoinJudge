@@ -52,10 +52,11 @@ export interface StoreActions {
   addSubscription: (input: NewSubscriptionInput) => void
   updateSubscription: (id: number, patch: Partial<NewSubscriptionInput>) => void
   deleteSubscription: (id: number) => void
-  /* 分类（内置不可删；删除前迁移检查在 P3 做） */
+  /* 分类（内置不可删；删除前须把记录迁移走） */
   addCategory: (input: { name: string; emoji: string; color: string }) => void
   updateCategory: (id: string, patch: Partial<{ name: string; emoji: string; color: string }>) => void
   deleteCategory: (id: string) => void
+  migrateCategory: (fromId: string, toId: string) => void // 把某分类下的记录全部改挂到另一分类
   /* 消费原则 */
   addPrinciple: (text: string) => void
   updatePrinciple: (index: number, text: string) => void
@@ -164,6 +165,10 @@ export const useStore = create<Store>()(
           categories: s.categories.find((c) => c.id === id)?.builtin
             ? s.categories
             : s.categories.filter((c) => c.id !== id),
+        })),
+      migrateCategory: (fromId, toId) =>
+        set((s) => ({
+          records: s.records.map((r) => (r.categoryId === fromId ? { ...r, categoryId: toId } : r)),
         })),
 
       /* ── 消费原则 ── */

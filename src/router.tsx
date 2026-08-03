@@ -12,6 +12,7 @@ const MinePage = lazy(() => import('./pages/MinePage'))
 const StatsPage = lazy(() => import('./pages/StatsPage'))
 const AssetsPage = lazy(() => import('./pages/AssetsPage'))
 const MonthlyPage = lazy(() => import('./pages/MonthlyPage'))
+const CategoriesPage = lazy(() => import('./pages/CategoriesPage'))
 
 export default function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ export default function AppRoutes() {
         <Route path="/stats" element={<StatsPage />} />
         <Route path="/assets" element={<AssetsPage />} />
         <Route path="/monthly" element={<MonthlyPage />} />
+        <Route path="/categories" element={<CategoriesPage />} />
         <Route path="*" element={<Navigate to="/wallet" replace />} />
       </Routes>
     </Suspense>
