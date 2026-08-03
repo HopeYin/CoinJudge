@@ -8,6 +8,7 @@ import AppRoutes from './router'
 import TabBar from './components/TabBar'
 import RecordModal from './components/RecordModal'
 import { useStore } from './store/store'
+import { useReviewNotify } from './lib/notify'
 
 /** 根据 settings.theme 切换 .dark；auto 时监听系统偏好 */
 function useTheme() {
@@ -39,6 +40,7 @@ function PageOutlet() {
 
 export default function App() {
   useTheme()
+  useReviewNotify() // P3-2：有待回顾时发浏览器系统通知
   return (
     <HashRouter>
       <div className="shell min-h-screen bg-bg relative">

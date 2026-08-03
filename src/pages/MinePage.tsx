@@ -11,6 +11,7 @@ import { IconPerson, IconChevron } from '../components/icons'
 import { useStore } from '../store/store'
 import { formatYMD, todayStr } from '../lib/date'
 import { buildBackup, parseBackup } from '../lib/backup'
+import { enableNotify } from '../lib/notify'
 import { useBackClose } from '../lib/useBackClose'
 
 interface MoneyRowProps {
@@ -51,6 +52,7 @@ export default function MinePage() {
   const importAll = useStore((s) => s.importAll)
   const clearRecords = useStore((s) => s.clearRecords)
   const setTheme = useStore((s) => s.setTheme)
+  const setNotifyEnabled = useStore((s) => s.setNotifyEnabled)
 
   const [tip, setTip] = useState<{ ok: boolean; text: string } | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -66,6 +68,21 @@ export default function MinePage() {
   const showTip = (ok: boolean, text: string) => {
     setTip({ ok, text })
     window.setTimeout(() => setTip(null), 3000)
+  }
+
+  /* ── 通知开关（P3-2）── */
+  const handleNotifyToggle = async () => {
+    if (settings.notifyEnabled) {
+      setNotifyEnabled(false)
+      return
+    }
+    const result = await enableNotify()
+    if (result.ok) {
+      setNotifyEnabled(true)
+      showTip(true, '已开启买后回顾提醒')
+    } else {
+      showTip(false, result.reason ?? '开启失败')
+    }
   }
 
   /* ── 导出备份 ── */
@@ -181,6 +198,32 @@ export default function MinePage() {
         </div>
       </div>
 
+      {/* 提醒 */}
+      <div className="bg-card rounded-l shadow-card mx-4 mt-2.5 p-4">
+        <div className="text-xs text-text-3 mb-1">提醒</div>
+        <div className="flex items-center justify-between py-2">
+          <span className="text-[15px] text-text-1">买后回顾提醒</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={settings.notifyEnabled}
+            onClick={handleNotifyToggle}
+            className={`pressable w-12 h-7 rounded-full relative transition-colors ${
+              settings.notifyEnabled ? 'bg-primary' : 'bg-border'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow transition-all ${
+                settings.notifyEnabled ? 'left-[22px]' : 'left-0.5'
+              }`}
+            />
+          </button>
+        </div>
+        <p className="text-[11px] text-text-3 pb-1">
+          到回顾天数还没复盘时，用浏览器系统通知提醒你 · 网页通知依赖浏览器，需允许通知权限
+        </p>
+      </div>
+
       {/* 数据管理 */}
       <div className="bg-card rounded-l shadow-card mx-4 mt-2.5 p-4">
         <div className="text-xs text-text-3 mb-1">数据管理</div>
@@ -210,10 +253,22 @@ export default function MinePage() {
             e.target.value = ''
           }}
         />
-        {tip && (
-          <p className={`text-xs pt-2 ${tip.ok ? 'text-success' : 'text-danger'}`}>{tip.text}</p>
-        )}
       </div>
+
+      {/* 全局轻提示 */}
+      {tip && (
+        <div
+          className={`modal-fixed bottom-24 left-0 right-0 z-[95] flex justify-center pointer-events-none`}
+        >
+          <span
+            className={`px-4 py-2 rounded-full text-xs text-white shadow-float ${
+              tip.ok ? 'bg-success' : 'bg-danger'
+            }`}
+          >
+            {tip.text}
+          </span>
+        </div>
+      )}
 
       <p className="text-center text-xs text-text-3 py-5">硬币判官 v2.1 · 记一笔，判一笔</p>
 
