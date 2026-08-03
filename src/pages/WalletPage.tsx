@@ -12,8 +12,8 @@ import BankCard from '../components/BankCard'
 import { IconVault, IconCardAsset, IconCardBudget, IconCardSave } from '../components/icons'
 import { useStore } from '../store/store'
 import {
-  getMonthInfo, effectiveBudget, monthShopping, monthSubs,
-  estimatedAssets, expectedSavings, monthRemaining, budgetUsedRatio,
+  getMonthInfo, effectiveBudget, effectiveIncome, monthShopping, monthSubs,
+  estimatedAssets, expectedSavings, monthRemaining, budgetUsedRatio, currentReconciliation,
 } from '../store/derived'
 import { fmt2 } from '../lib/format'
 
@@ -41,6 +41,11 @@ export default function WalletPage() {
   const subs = monthSubs(state.subscriptions)
   const effBudget = effectiveBudget(settings)
   const usedRatio = budgetUsedRatio(state)
+  // P2-6：本月已对账 → 存钱卡切换「实际存了」口径 + 储蓄率（0–1 夹取）
+  const recon = currentReconciliation(state.monthlyHistory)
+  const effIncome = effectiveIncome(settings)
+  const savingsRate =
+    recon && effIncome > 0 ? Math.min(1, Math.max(0, recon.actualSavings / effIncome)) : 0
   const grayPrefix = 1 - info.proRata // 注册月灰前缀宽度（文档 6.4）
   const dailyAvail = info.remainingDays > 0 ? remaining / info.remainingDays : 0
   const bigNumCls = `text-[26px] font-light tracking-tight tabular-nums ${bouncing ? 'success-bounce' : ''}`
@@ -173,26 +178,49 @@ export default function WalletPage() {
       >
         <IconCardSave width={26} height={26} className="opacity-80 mb-0.5" />
         {settings.income > 0 ? (
-          <div className="flex-1 flex items-center gap-2.5">
-            <div className="flex-1 min-w-0">
-              <div className="text-[11px] opacity-65 mb-[3px]">这个月预计能存</div>
-              <div className={bigNumCls}>¥{fmt2(savings)}</div>
-            </div>
-            {/* 收入/预算/购物/会员 四宫格 */}
-            <div className="grid grid-cols-2 gap-[5px] w-[110px] shrink-0">
-              {[
-                { label: '收入', val: settings.income },
-                { label: '预算', val: settings.budget },
-                { label: '购物', val: shopping },
-                { label: '会员', val: subs },
-              ].map((g) => (
-                <div key={g.label} className="rounded-s px-2 py-1.5 flex flex-col gap-px" style={{ background: 'var(--color-oncard-track)' }}>
-                  <span className="text-[11px] font-semibold tabular-nums">¥{fmt2(g.val)}</span>
-                  <span className="text-[9px] opacity-60">{g.label}</span>
+          <>
+            <div className="flex-1 flex items-center gap-2.5">
+              <div className="flex-1 min-w-0">
+                {/* P2-6：本月已对账则切换为「实际存了」口径（文档 6.5 月结闭环） */}
+                <div className="text-[11px] opacity-65 mb-[3px]">
+                  {recon ? '这个月实际存了' : '这个月预计能存'}
                 </div>
-              ))}
+                <div className={bigNumCls}>¥{fmt2(recon ? recon.actualSavings : savings)}</div>
+              </div>
+              {/* 收入/预算/购物/会员 四宫格 */}
+              <div className="grid grid-cols-2 gap-[5px] w-[110px] shrink-0">
+                {[
+                  { label: '收入', val: settings.income },
+                  { label: '预算', val: settings.budget },
+                  { label: '购物', val: shopping },
+                  { label: '会员', val: subs },
+                ].map((g) => (
+                  <div key={g.label} className="rounded-s px-2 py-1.5 flex flex-col gap-px" style={{ background: 'var(--color-oncard-track)' }}>
+                    <span className="text-[11px] font-semibold tabular-nums">¥{fmt2(g.val)}</span>
+                    <span className="text-[9px] opacity-60">{g.label}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+            {/* 对账后：储蓄率渐变条（实际存了 / 折算收入） */}
+            {recon && (
+              <div className="mt-auto">
+                <div className="h-[5px] rounded-[3px] relative mb-1" style={{ background: 'var(--color-oncard-track)' }}>
+                  <div
+                    className="absolute left-0 top-0 h-full rounded-[3px] transition-[width] duration-500"
+                    style={{
+                      width: `${savingsRate * 100}%`,
+                      background: 'linear-gradient(90deg, var(--color-success), var(--color-primary))',
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between text-[9px] opacity-55">
+                  <span>储蓄率</span>
+                  <span>{Math.round(savingsRate * 100)}%</span>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <div className="flex-1 flex flex-col justify-center">
             <div className="text-[11px] opacity-65 mb-[3px]">存钱卡</div>
