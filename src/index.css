@@ -257,3 +257,11 @@ body {
 .overlay-fade {
   animation: fadeIn 0.25s ease;
 }
+
+/* 日期滚轮（P2-1）：隐藏各浏览器滚动条 */
+.picker-list {
+  scrollbar-width: none;
+}
+.picker-list::-webkit-scrollbar {
+  display: none;
+}

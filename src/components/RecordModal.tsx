@@ -1,6 +1,6 @@
 /**
  * 全局记账弹窗（文档 P1：唯一记账入口，全局只挂载一份）
- * 流程：金额键盘 → 分类（内置 6 类）→ 情绪三选 → 审判二选 → 日期（P1 原生 date input）→ 保存/再记
+ * 流程：金额键盘 → 分类（内置 6 类）→ 情绪三选 → 审判二选 → 日期（P2-1 自研滚轮 DateRoller）→ 保存/再记
  * 彩蛋：弹窗内随机展示一条用户原则（移植自旧版 Add.vue 的 💡 提示条；无原则不显示）
  *
  * 打开方式：任何地方 dispatch 'open-record-modal' 事件（TabBar 中央 + 号）。
@@ -10,8 +10,9 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../store/store'
 import { MOODS } from '../store/types'
 import type { Mood, Tag } from '../store/types'
-import { todayStr } from '../lib/date'
+import { todayStr, formatYMD, relativeDayLabel } from '../lib/date'
 import Numpad from './Numpad'
+import DateRoller from './DateRoller'
 
 export default function RecordModal() {
   const [open, setOpen] = useState(false)
@@ -25,6 +26,7 @@ export default function RecordModal() {
   const [tag, setTag] = useState<Tag>('worth') // 审判默认「值得」（文档 5.2）
   const [name, setName] = useState('')
   const [date, setDate] = useState(todayStr())
+  const [pickerOpen, setPickerOpen] = useState(false) // 日期滚轮开关（P2-1）
   const [hintIdx, setHintIdx] = useState(0)
 
   useEffect(() => {
@@ -187,21 +189,34 @@ export default function RecordModal() {
           </div>
         )}
 
-        {/* 日期（P1 用原生 date input，P2 换自研滚轮） */}
-        <div className="flex items-center gap-3 px-3.5 py-2.5 mb-3 rounded-[10px] bg-bg">
+        {/* 日期（P2-1：自研滚轮 DateRoller；显示 YYYY/M/D + 今天/昨天/前天） */}
+        <button
+          type="button"
+          onClick={() => setPickerOpen(true)}
+          className="pressable w-full flex items-center gap-3 px-3.5 py-2.5 mb-3 rounded-[10px] bg-bg text-left"
+        >
           <span className="text-sm text-text-2 shrink-0">日期</span>
-          <input
-            type="date"
-            value={date}
-            max={todayStr()}
-            onChange={(e) => e.target.value && setDate(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-text-1 outline-none"
-          />
-        </div>
+          <span className="flex-1 text-sm text-text-1">
+            {formatYMD(date)}
+            {relativeDayLabel(date) && <span className="text-primary ml-1.5">{relativeDayLabel(date)}</span>}
+          </span>
+          <span className="text-text-3 text-xs">›</span>
+        </button>
 
         {/* 深色数字键盘 */}
         <Numpad onKeypress={onKeypress} onSave={() => save(false)} onSaveMore={() => save(true)} />
       </div>
+
+      {/* 日期滚轮（盖在记账弹窗之上，z-110） */}
+      <DateRoller
+        open={pickerOpen}
+        value={date}
+        onCancel={() => setPickerOpen(false)}
+        onConfirm={(ds) => {
+          setDate(ds)
+          setPickerOpen(false)
+        }}
+      />
     </div>
   )
 }
