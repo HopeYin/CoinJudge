@@ -5,9 +5,10 @@
  * variant:
  *  - plain  正常（圆睁方眼）
  *  - happy  眯眼笑（眼睛半高，底部对齐）——用于"全部完成"的空状态
+ *  - wave   招手（右手臂举高）——用于"来添加第一个吧"的空状态
  */
 interface Props {
-  variant?: 'plain' | 'happy'
+  variant?: 'plain' | 'happy' | 'wave'
   width?: number
   className?: string
 }
@@ -15,6 +16,7 @@ interface Props {
 export default function Monster({ variant = 'plain', width = 96, className }: Props) {
   const eyeH = variant === 'happy' ? 12 : 20
   const eyeY = variant === 'happy' ? 28 : 20 // 底部对齐，眯眼像笑
+  const armRY = variant === 'wave' ? 8 : 28 // 招手：右手高举过头顶
   return (
     <svg
       viewBox="0 0 136 96"
@@ -32,9 +34,9 @@ export default function Monster({ variant = 'plain', width = 96, className }: Pr
       {/* 眼睛 */}
       <rect x="36" y={eyeY} width="20" height={eyeH} fill="#1A1A1A" />
       <rect x="76" y={eyeY} width="20" height={eyeH} fill="#1A1A1A" />
-      {/* 手臂 */}
+      {/* 手臂（wave 时右手高举） */}
       <rect x="8" y="28" width="12" height="12" fill="#FFFFFF" />
-      <rect x="116" y="28" width="12" height="12" fill="#FFFFFF" />
+      <rect x="116" y={armRY} width="12" height="12" fill="#FFFFFF" />
       {/* 腿（顶部 6px 是身体投下的阴影） */}
       <rect x="28" y="76" width="28" height="16" fill="#FFFFFF" />
       <rect x="28" y="76" width="28" height="6" fill="#DDE4F0" />

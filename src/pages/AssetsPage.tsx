@@ -4,9 +4,12 @@
  */
 import { useState } from 'react'
 import PageHeader from '../components/PageHeader'
+import EmptyState from '../components/EmptyState'
+import Monster from '../components/Monster'
 import { ACCOUNT_ICON_DEFS, getAccountIconDef } from '../components/icons'
 import { useStore } from '../store/store'
 import { fmt2 } from '../lib/format'
+import { useBackClose } from '../lib/useBackClose'
 
 export default function AssetsPage() {
   const accounts = useStore((s) => s.accounts)
@@ -16,6 +19,9 @@ export default function AssetsPage() {
 
   const [showAdd, setShowAdd] = useState(false)
   const [form, setForm] = useState({ icon: 'wechat', name: '微信', balance: '' })
+
+  // 添加账户弹窗：返回键优先关弹窗（P2-4）
+  useBackClose(showAdd, () => setShowAdd(false))
 
   const totalAssets = accounts.reduce((s, a) => s + (a.balance || 0), 0)
 
@@ -47,7 +53,11 @@ export default function AssetsPage() {
       {/* 账户列表 */}
       <div className="text-xs text-text-3 px-5 pt-4 pb-1.5">我的账户</div>
       {accounts.length === 0 && (
-        <p className="text-center text-text-3 text-sm py-10">还没有账户，点右下角 + 添加</p>
+        <EmptyState
+          illustration={<Monster variant="wave" width={72} />}
+          title="还没有账户"
+          description="点右下角 + 添加第一个"
+        />
       )}
       {accounts.map((acc) => {
         const def = getAccountIconDef(acc.icon)

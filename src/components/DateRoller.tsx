@@ -10,6 +10,7 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { daysInMonth, parseDate } from '../lib/date'
+import { useBackClose } from '../lib/useBackClose'
 
 /* 跨 React 18/19 类型版本都兼容的 ref 形状（只要求有 current 可读） */
 type DivRef = { current: HTMLDivElement | null }
@@ -177,6 +178,9 @@ export default function DateRoller({ open, value, onConfirm, onCancel }: Props) 
     const dd = clampDay(y, m, d)
     onConfirm(`${y}-${String(m).padStart(2, '0')}-${String(dd).padStart(2, '0')}`)
   }
+
+  // 返回键优先关滚轮（P2-4；嵌套在记账弹窗上时只关自己）
+  useBackClose(open, onCancel)
 
   if (!open) return null
 

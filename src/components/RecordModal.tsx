@@ -11,6 +11,7 @@ import { useStore } from '../store/store'
 import { MOODS } from '../store/types'
 import type { Mood, Tag } from '../store/types'
 import { todayStr, formatYMD, relativeDayLabel } from '../lib/date'
+import { useBackClose } from '../lib/useBackClose'
 import Numpad from './Numpad'
 import DateRoller from './DateRoller'
 
@@ -28,6 +29,9 @@ export default function RecordModal() {
   const [date, setDate] = useState(todayStr())
   const [pickerOpen, setPickerOpen] = useState(false) // 日期滚轮开关（P2-1）
   const [hintIdx, setHintIdx] = useState(0)
+
+  // 返回键优先关弹窗（P2-4）；日期滚轮自己也有，嵌套时只关最上层
+  useBackClose(open, () => setOpen(false))
 
   useEffect(() => {
     const handler = () => {

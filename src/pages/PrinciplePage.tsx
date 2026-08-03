@@ -14,6 +14,7 @@ import { IconScale } from '../components/icons'
 import { useStore } from '../store/store'
 import { daysSince, formatMD } from '../lib/date'
 import { fmt2 } from '../lib/format'
+import { useBackClose } from '../lib/useBackClose'
 import type { Record as SpendRecord } from '../store/types'
 
 export default function PrinciplePage() {
@@ -29,6 +30,9 @@ export default function PrinciplePage() {
 
   const [editing, setEditing] = useState(false)
   const [reviewTarget, setReviewTarget] = useState<SpendRecord | null>(null)
+
+  // 回顾弹窗：返回键优先关弹窗（P2-4）
+  useBackClose(!!reviewTarget, () => setReviewTarget(null))
 
   /* 待回顾：未回顾 且 到天数，最久的排最前（文档 5.2 + P2-2） */
   const pending = records

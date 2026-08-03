@@ -6,6 +6,7 @@
 import { useMemo, useState } from 'react'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
+import Monster from '../components/Monster'
 import { IconFlow } from '../components/icons'
 import { useStore } from '../store/store'
 import { recordsInMonth } from '../store/derived'
@@ -143,7 +144,11 @@ export default function FlowPage() {
       {filter === 'sub' ? (
         <div>
           {subscriptions.length === 0 && (
-            <EmptyState emoji="💳" title="还没有会员订阅" description="点下面按钮添加第一个" />
+            <EmptyState
+              illustration={<Monster variant="wave" width={72} />}
+              title="还没有会员订阅"
+              description="点下面按钮添加第一个"
+            />
           )}
           {subscriptions.map((sub) => (
             <button
@@ -179,7 +184,11 @@ export default function FlowPage() {
         /* ── 记录列表 ── */
         <div>
           {page.length === 0 ? (
-            <EmptyState title="还没有记录" description="点击底部 + 记第一笔" emoji="🪙" />
+            <EmptyState
+              illustration={<Monster width={72} />}
+              title="还没有记录"
+              description="点击底部 + 记第一笔"
+            />
           ) : (
             <div className="record-list">
               {page.map((r) => (
