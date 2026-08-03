@@ -8,6 +8,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
+import BankCard from '../components/BankCard'
 import { IconVault, IconCardAsset, IconCardBudget, IconCardSave } from '../components/icons'
 import { useStore } from '../store/store'
 import {
@@ -15,11 +16,6 @@ import {
   estimatedAssets, expectedSavings, monthRemaining, budgetUsedRatio,
 } from '../store/derived'
 import { fmt2 } from '../lib/format'
-
-/* 银行卡通用样式（文档 9.2：严格 aspect-ratio 85.6/54，蓝渐变 + 彩色投影） */
-const bankCardCls =
-  'pressable mx-4 mt-2.5 rounded-l px-5 pt-[18px] pb-3.5 flex flex-col relative overflow-hidden cursor-pointer text-on-primary'
-const bankCardStyle = { aspectRatio: '85.6 / 54' as const }
 
 export default function WalletPage() {
   const navigate = useNavigate()
@@ -61,15 +57,10 @@ export default function WalletPage() {
     <div className="min-h-screen bg-bg pb-28">
       <PageHeader title="金库" icon={<IconVault width={22} height={22} />} />
 
-      {/* ≥768px：三卡改 2 栏网格（文档 8.3）；资产卡 + 预算卡一排，存钱卡第二排 */}
-      <div className="md:grid md:grid-cols-2 md:items-start">
+      {/* 三卡单栏排列（v2.1 文档第 3 节：任何屏幕都 430px 单栏，不做桌面双栏） */}
 
       {/* ── 资产卡 ── */}
-      <div
-        className={`${bankCardCls} shadow-blue-card`}
-        style={{ ...bankCardStyle, background: 'var(--gradient-bank)' }}
-        onClick={() => navigate('/assets')}
-      >
+      <BankCard onClick={() => navigate('/assets')}>
         <IconCardAsset width={26} height={26} className="opacity-80 mb-0.5" />
         <div className="flex-1 flex items-center gap-2.5">
           <div className="flex-1 min-w-0">
@@ -111,15 +102,11 @@ export default function WalletPage() {
           )}
         </div>
         <div className="text-right text-[10px] opacity-45 mt-auto mb-1.5">管理账户 →</div>
-      </div>
+      </BankCard>
 
       {/* ── 预算卡 ── */}
-      <div
-        className={`${bankCardCls} ${settings.budget > 0 ? 'shadow-blue-card' : ''}`}
-        style={{
-          ...bankCardStyle,
-          background: settings.budget > 0 ? 'var(--gradient-bank)' : 'var(--gradient-bank-gray)',
-        }}
+      <BankCard
+        active={settings.budget > 0}
         onClick={() => navigate(settings.budget > 0 ? '/monthly' : '/mine')}
       >
         <IconCardBudget width={26} height={26} className="opacity-80 mb-0.5" />
@@ -177,15 +164,11 @@ export default function WalletPage() {
             <div className="text-right text-[10px] opacity-45 mt-1">月底对账 →</div>
           </>
         )}
-      </div>
+      </BankCard>
 
       {/* ── 存钱卡 ── */}
-      <div
-        className={`${bankCardCls} ${settings.income > 0 ? 'shadow-blue-card' : ''}`}
-        style={{
-          ...bankCardStyle,
-          background: settings.income > 0 ? 'var(--gradient-bank)' : 'var(--gradient-bank-gray)',
-        }}
+      <BankCard
+        active={settings.income > 0}
         onClick={() => settings.income === 0 && navigate('/mine')}
       >
         <IconCardSave width={26} height={26} className="opacity-80 mb-0.5" />
@@ -217,9 +200,7 @@ export default function WalletPage() {
             <div className="text-[11px] opacity-50 mt-1">点击设置月收入 →</div>
           </div>
         )}
-      </div>
-
-      </div>{/* md:grid 双栏卡片区结束 */}
+      </BankCard>
     </div>
   )
 }

@@ -3,20 +3,14 @@
 @tailwind utilities;
 
 /*
- * 响应式布局壳（文档 8.3）
- * <768px：内容最大宽 430px 居中；≥768px：内容区最大宽 960px。
- * TabBar / 弹窗 / 底栏永远最大宽 430px 居中。
+ * 布局壳（v2.1 文档第 3 节：手机优先，任何屏幕都 430px 居中）
+ * 内容列 / 页头 / TabBar / 弹窗 / 底栏：永远最大宽 430px 居中，桌面端不再放宽。
  */
 @layer components {
   .shell {
     width: 100%;
     max-width: 430px;
     margin: 0 auto;
-  }
-  @media (min-width: 768px) {
-    .shell {
-      max-width: 960px;
-    }
   }
   /* 固定定位元素没法继承父级宽度，单独给一套（页头用） */
   .shell-fixed {
@@ -26,18 +20,36 @@
     width: 100%;
     max-width: 430px;
   }
-  @media (min-width: 768px) {
-    .shell-fixed {
-      max-width: 960px;
-    }
-  }
-  /* 弹窗/底栏：任何屏宽下都 430 居中（文档 8.3） */
+  /* 弹窗/底栏：任何屏宽下都 430 居中 */
   .modal-fixed {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
     max-width: 430px;
+  }
+  /* 银行卡（v2.1 文档 9.2 真卡规范）：
+     85.6:54 真卡比例；圆角用百分比（真卡 ≈ 卡宽 3.7% / 卡高 5.9%），
+     卡片任何尺寸下圆角观感一致——v2.0 固定像素圆角在宽屏被拉"钝"的病根。 */
+  .bank-card {
+    aspect-ratio: 85.6 / 54;
+    border-radius: 4% / 6%;
+  }
+}
+
+/*
+ * 桌面端（≥768px）：内容列保持 430px，两侧留白 + 极淡品牌蓝装饰（≤5%，文档 3.2），
+ * 内容列加细描边和轻投影，看起来像一张独立的"手机屏"。
+ */
+@media (min-width: 768px) {
+  body {
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(91, 184, 255, 0.05), transparent 42%),
+      radial-gradient(circle at 88% 82%, rgba(91, 184, 255, 0.04), transparent 42%);
+    background-attachment: fixed;
+  }
+  .shell {
+    box-shadow: 0 0 0 1px var(--color-border), 0 0 48px rgba(31, 36, 48, 0.05);
   }
 }
 
