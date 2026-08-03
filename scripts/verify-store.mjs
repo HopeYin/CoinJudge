@@ -82,18 +82,16 @@ S2.deleteCategory('food')
 check('内置分类不可删', S2.categories.length === 6)
 
 /* 7. 自定义分类 + 迁移删除（P3-3） */
-const catCountBefore = S2.categories.length
-mod2.useStore.getState().addCategory({ name: '宠物', emoji: '🐱', color: '#FF6B6B' })
-const customCat = S2.categories[S2.categories.length - 1]
-check('新增自定义分类', S2.categories.length === catCountBefore + 1 && customCat.builtin === false)
-mod2.useStore.getState().addRecord({ amount: 15, name: '猫粮', categoryId: customCat.id, mood: 'need', date: expectToday })
-mod2.useStore.getState().migrateCategory(customCat.id, 'food')
-check(
-  '迁移分类：记录改挂到餐饮',
-  mod2.useStore.getState().records.find((r) => r.name === '猫粮')?.categoryId === 'food',
-)
-mod2.useStore.getState().deleteCategory(customCat.id)
-check('迁移后自定义分类可删', !mod2.useStore.getState().categories.some((c) => c.id === customCat.id))
+const S3 = () => mod2.useStore.getState() // 每次取最新快照
+const catCountBefore = S3().categories.length
+S3().addCategory({ name: '宠物', emoji: '🐱', color: '#FF6B6B' })
+const customCat = S3().categories[S3().categories.length - 1]
+check('新增自定义分类', S3().categories.length === catCountBefore + 1 && customCat.builtin === false)
+S3().addRecord({ amount: 15, name: '猫粮', categoryId: customCat.id, mood: 'need', date: expectToday })
+S3().migrateCategory(customCat.id, 'food')
+check('迁移分类：记录改挂到餐饮', S3().records.find((r) => r.name === '猫粮')?.categoryId === 'food')
+S3().deleteCategory(customCat.id)
+check('迁移后自定义分类可删', !S3().categories.some((c) => c.id === customCat.id))
 
 console.log(`\n══ 结果：${pass} 通过 / ${fail} 失败 ══`)
 process.exit(fail > 0 ? 1 : 0)
