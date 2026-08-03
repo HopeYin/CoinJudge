@@ -50,6 +50,7 @@ export default function MinePage() {
   const records = useStore((s) => s.records)
   const importAll = useStore((s) => s.importAll)
   const clearRecords = useStore((s) => s.clearRecords)
+  const setTheme = useStore((s) => s.setTheme)
 
   const [tip, setTip] = useState<{ ok: boolean; text: string } | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -150,6 +151,34 @@ export default function MinePage() {
           <span className="text-[15px] text-text-1">月底对账</span>
           <IconChevron width={18} height={18} className="text-text-3" />
         </button>
+      </div>
+
+      {/* 外观 */}
+      <div className="bg-card rounded-l shadow-card mx-4 mt-2.5 p-4">
+        <div className="text-xs text-text-3 mb-1">外观</div>
+        <div className="flex items-center justify-between py-2">
+          <span className="text-[15px] text-text-1">主题</span>
+          <div className="flex bg-bg rounded-m p-1">
+            {(
+              [
+                ['auto', '跟随系统'],
+                ['light', '浅色'],
+                ['dark', '深色'],
+              ] as const
+            ).map(([mode, label]) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setTheme(mode)}
+                className={`pressable px-3 py-1.5 rounded-s text-[13px] ${
+                  settings.theme === mode ? 'bg-card text-text-1 font-semibold shadow-card' : 'text-text-3'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* 数据管理 */}
