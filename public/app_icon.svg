@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="512" height="512" shape-rendering="crispEdges">
+  <!-- 圆角背景 -->
+  <defs>
+    <clipPath id="rounded">
+      <rect width="200" height="200" rx="44" ry="44"/>
+    </clipPath>
+  </defs>
+
+  <!-- 背景渐变蓝 -->
+  <rect width="200" height="200" rx="44" ry="44" fill="#5ba8f5"/>
+  <rect width="200" height="100" rx="44" ry="44" fill="#6db4f7"/>
+  <rect x="0" y="56" width="200" height="44" fill="#6db4f7"/>
+
+  <!-- 像素金币 右上角 -->
+  <!-- 外圈 -->
+  <rect x="124" y="20" width="8" height="8" fill="#f9a825"/>
+  <rect x="132" y="20" width="8" height="8" fill="#f9a825"/>
+  <rect x="140" y="20" width="8" height="8" fill="#f9a825"/>
+  <rect x="148" y="20" width="8" height="8" fill="#f9a825"/>
+  <rect x="116" y="28" width="8" height="8" fill="#f9a825"/>
+  <rect x="156" y="28" width="8" height="8" fill="#f9a825"/>
+  <rect x="112" y="36" width="8" height="8" fill="#f9a825"/>
+  <rect x="160" y="36" width="8" height="8" fill="#f9a825"/>
+  <rect x="112" y="44" width="8" height="8" fill="#f9a825"/>
+  <rect x="160" y="44" width="8" height="8" fill="#f9a825"/>
+  <rect x="112" y="52" width="8" height="8" fill="#f9a825"/>
+  <rect x="160" y="52" width="8" height="8" fill="#f9a825"/>
+  <rect x="116" y="60" width="8" height="8" fill="#f9a825"/>
+  <rect x="156" y="60" width="8" height="8" fill="#f9a825"/>
+  <rect x="124" y="68" width="8" height="8" fill="#f9a825"/>
+  <rect x="132" y="68" width="8" height="8" fill="#f9a825"/>
+  <rect x="140" y="68" width="8" height="8" fill="#f9a825"/>
+  <rect x="148" y="68" width="8" height="8" fill="#f9a825"/>
+  <!-- 内填充 -->
+  <rect x="124" y="28" width="32" height="40" fill="#ffd54f"/>
+  <rect x="120" y="36" width="8" height="24" fill="#ffd54f"/>
+  <rect x="152" y="36" width="8" height="24" fill="#ffd54f"/>
+  <!-- 高光 -->
+  <rect x="124" y="28" width="8" height="8" fill="#fff9c4"/>
+  <rect x="132" y="28" width="8" height="8" fill="#fff9c4"/>
+  <rect x="124" y="36" width="8" height="8" fill="#fff9c4"/>
+  <!-- ¥ 符号 -->
+  <rect x="132" y="36" width="8" height="4" fill="#f57f17"/>
+  <rect x="128" y="40" width="16" height="4" fill="#f57f17"/>
+  <rect x="132" y="44" width="8" height="12" fill="#f57f17"/>
+  <rect x="128" y="48" width="16" height="4" fill="#f57f17"/>
+
+  <!-- 怪兽身体 白色 左下 -->
+  <rect x="20" y="108" width="96" height="72" fill="#ffffff"/>
+  <!-- 高光 -->
+  <rect x="20" y="108" width="96" height="8" fill="#f0f4ff"/>
+  <!-- 阴影 -->
+  <rect x="108" y="116" width="8" height="64" fill="#dde4f0"/>
+  <rect x="20" y="172" width="96" height="8" fill="#dde4f0"/>
+
+  <!-- 眼睛 -->
+  <rect x="36" y="124" width="20" height="20" fill="#1a1a1a"/>
+  <rect x="76" y="124" width="20" height="20" fill="#1a1a1a"/>
+
+  <!-- 手臂 -->
+  <rect x="8" y="132" width="12" height="12" fill="#ffffff"/>
+  <rect x="116" y="132" width="12" height="12" fill="#ffffff"/>
+
+  <!-- 腿 -->
+  <rect x="28" y="180" width="28" height="16" fill="#ffffff"/>
+  <rect x="28" y="180" width="28" height="6" fill="#dde4f0"/>
+  <rect x="80" y="180" width="28" height="16" fill="#ffffff"/>
+  <rect x="80" y="180" width="28" height="6" fill="#dde4f0"/>
+</svg>
