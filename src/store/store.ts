@@ -62,6 +62,9 @@ export interface StoreActions {
   deletePrinciple: (index: number) => void
   /* 月度对账历史（P2 用） */
   upsertMonthlyRecord: (rec: MonthlyRecord) => void
+  /* 数据管理（文档 5.4） */
+  importAll: (data: Omit<AppState, 'meta'>) => void // 导入备份：整体替换，保留 meta
+  clearRecords: (range?: { start: string; end: string }) => void // 清空流水：全部或按日期范围
 }
 
 export type Store = AppState & StoreActions
@@ -180,6 +183,24 @@ export const useStore = create<Store>()(
               : [...s.monthlyHistory, rec]
           return { monthlyHistory }
         }),
+
+      /* ── 数据管理 ── */
+      importAll: (data) =>
+        set(() => ({
+          settings: data.settings,
+          accounts: data.accounts,
+          records: data.records,
+          subscriptions: data.subscriptions,
+          categories: data.categories,
+          principles: data.principles,
+          monthlyHistory: data.monthlyHistory,
+        })),
+      clearRecords: (range) =>
+        set((s) => ({
+          records: range
+            ? s.records.filter((r) => r.date < range.start || r.date > range.end)
+            : [],
+        })),
     }),
     {
       name: 'coinjudge_v2', // 单 key（文档 5.3）
