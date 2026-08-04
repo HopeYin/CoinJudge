@@ -66,12 +66,7 @@ export default function AssetsPage() {
             key={acc.id}
             className="bg-card mx-4 mb-1.5 rounded-[14px] shadow-card px-3.5 py-3 flex items-center gap-2.5"
           >
-            <div
-              className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0"
-              style={{ background: def.bg, color: def.color }}
-            >
-              <def.Icon width={18} height={18} />
-            </div>
+            <def.Icon width={30} height={30} className="shrink-0" style={{ color: def.color }} />
             <input
               value={acc.name}
               onChange={(e) => updateAccount(acc.id, { name: e.target.value })}
@@ -138,12 +133,7 @@ export default function AssetsPage() {
                     form.icon === def.key ? 'border-primary bg-primary-bg' : 'border-border bg-bg'
                   }`}
                 >
-                  <div
-                    className="w-11 h-11 rounded-[13px] flex items-center justify-center"
-                    style={{ background: def.bg, color: def.color }}
-                  >
-                    <def.Icon width={22} height={22} />
-                  </div>
+                  <def.Icon width={34} height={34} style={{ color: def.color }} />
                   <span className="text-[11px] text-text-2">{def.name}</span>
                 </button>
               ))}
