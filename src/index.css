@@ -169,6 +169,8 @@
 html {
   /* 系统跟随的底色切换时顺一点 */
   transition: background-color 0.2s ease;
+  /* 永远给滚动条留位置：页面从矮变高（如流水页）时内容不左右跳 */
+  scrollbar-gutter: stable;
 }
 
 body {
