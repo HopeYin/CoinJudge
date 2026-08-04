@@ -1,32 +1,39 @@
-# React + TypeScript + Vite
+# CoinJudge · 硬币判官
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> 记一笔，判一笔。
+> 一个帮你记账、复盘消费值不值、管住冲动消费的个人记账 PWA。
 
-Currently, two official plugins are available:
+## 这是什么
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 🏦 **金库**：总资产卡 / 预算卡 / 存钱卡三张"银行卡"，一眼看清钱的状况
+- 💸 **流水**：3 秒记一笔——金额、分类、情绪（冲动😡/需要✅/奖励🎁）、审判（值/不值）
+- ⚖️ **原则**：写下自己的消费原则，买后 N 天系统提醒你回顾"买的东西用到了吗"
+- 📊 **统计**：每日消费趋势、分类占比、值得/不值得统计、情绪分布
+- 🧾 **月底对账**：录入各账户期末余额，反推"看不见的日常支出"，生成分享卡
+- 🌙 深色模式 / 📱 PWA（可添加到手机主屏幕，离线可用）/ 💾 本地存储 + JSON 备份导入导出
 
-## React Compiler
+## 技术栈
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Vite + React + TypeScript + Tailwind CSS + zustand（persist 本地持久化）+ vite-plugin-pwa
 
-## Expanding the Oxlint configuration
+## 本地开发
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # 开发预览
+npm run build    # 打包到 dist/
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 验证脚本
+
+```bash
+node scripts/verify-formulas.mjs  # 22 项公式手算对照
+node scripts/verify-store.mjs     # 18 项数据层行为
+node scripts/verify-backup.mjs    # 11 项备份/清空
+```
+
+## 文档
+
+- 《docs/设计规范.md》：全部视觉规则（色板/字号/圆角/组件/动效），做新页面照它取
+
+数据存在浏览器本地（localStorage），不上传任何服务器；备份走 JSON 文件导出。
